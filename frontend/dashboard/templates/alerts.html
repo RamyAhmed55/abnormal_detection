@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block page_title %}Alerts{% endblock %}
+{% block header_title %}Detection Alerts{% endblock %}
+
+{% block content %}
+<!-- Filter Bar -->
+<div class="filter-bar">
+  <div class="filter-group">
+    <button class="filter-btn active" id="filterAll" onclick="filterAlerts('all')">All</button>
+    <button class="filter-btn" id="filterAbnormal" onclick="filterAlerts('abnormal')">
+      <span class="dot dot-red"></span> Abnormal
+    </button>
+    <button class="filter-btn" id="filterNormal" onclick="filterAlerts('normal')">
+      <span class="dot dot-green"></span> Normal
+    </button>
+  </div>
+  <div class="search-box">
+    <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/></svg>
+    <input type="text" id="alertSearch" placeholder="Search alerts..." oninput="searchAlerts()">
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <div class="alerts-count" id="alertsCount">Loading...</div>
+    <button class="btn-ghost" id="markReadBtn" onclick="markAllRead()" style="display:none;font-size:12px;padding:6px 14px;gap:6px">
+      <svg viewBox="0 0 20 20" fill="currentColor" style="width:14px;height:14px"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+      Mark All Read
+    </button>
+  </div>
+</div>
+
+<!-- Alerts Grid -->
+<div class="alerts-container" id="alertsContainer">
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading alerts...</p>
+  </div>
+</div>
+
+<!-- Alert Detail Modal -->
+<div class="modal-backdrop" id="alertModal" style="display:none" onclick="closeModal(event)">
+  <div class="modal-box" id="alertModalBox">
+    <button class="modal-close" onclick="document.getElementById('alertModal').style.display='none'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="modal-header" id="modalHeader"></div>
+
+    <div class="modal-body">
+      <!-- Video Player -->
+      <div class="modal-video-wrap" id="modalVideoWrap" style="display:none">
+        <video id="modalVideo" controls class="modal-video">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+
+      <!-- Result Details -->
+      <div class="modal-details" id="modalDetails"></div>
+
+      <!-- Full Message -->
+      <div class="modal-message-wrap" id="modalMessageWrap" style="display:none">
+        <h4>Full Alert Message</h4>
+        <pre id="modalMessage" class="alert-message-pre"></pre>
+      </div>
+    </div>
+
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', filename='js/alerts.js') }}"></script>
+{% endblock %}

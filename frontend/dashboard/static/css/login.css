@@ -1,0 +1,275 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   login.css — Login Page Styles
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 30% 60%, rgba(255,107,26,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(239,68,68,0.06) 0%, transparent 50%),
+              var(--bg-base);
+}
+
+/* ─── Animated Background Particles ─────────────────────────────────────── */
+
+.login-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flame-particle {
+  position: absolute;
+  border-radius: 50% 50% 30% 70%;
+  filter: blur(60px);
+  animation: floatFlame linear infinite;
+  opacity: 0;
+}
+.flame-particle.p1 { width:160px; height:200px; background:rgba(255,107,26,0.15); left:10%; animation-duration:12s; animation-delay:0s; }
+.flame-particle.p2 { width:100px; height:140px; background:rgba(239,68,68,0.12); left:75%; animation-duration:15s; animation-delay:2s; }
+.flame-particle.p3 { width:200px; height:240px; background:rgba(255,180,0,0.08); left:45%; animation-duration:18s; animation-delay:4s; }
+.flame-particle.p4 { width:80px;  height:110px; background:rgba(255,107,26,0.1); left:25%; animation-duration:10s; animation-delay:6s; }
+.flame-particle.p5 { width:120px; height:160px; background:rgba(239,68,68,0.08); left:60%; animation-duration:14s; animation-delay:1s; }
+
+.smoke-particle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: floatSmoke linear infinite;
+  opacity: 0;
+}
+.smoke-particle.s1 { width:300px; height:300px; background:rgba(100,100,120,0.08); left:5%;  animation-duration:20s; animation-delay:0s; }
+.smoke-particle.s2 { width:200px; height:200px; background:rgba(80,80,100,0.06);  left:55%; animation-duration:25s; animation-delay:5s; }
+.smoke-particle.s3 { width:250px; height:250px; background:rgba(90,90,110,0.07);  left:35%; animation-duration:22s; animation-delay:8s; }
+
+@keyframes floatFlame {
+  0%   { transform: translateY(110vh) scale(0.5) rotate(-5deg); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { transform: translateY(-20vh) scale(1.2) rotate(8deg); opacity: 0; }
+}
+@keyframes floatSmoke {
+  0%   { transform: translateY(80vh) scale(0.8); opacity: 0; }
+  15%  { opacity: 0.5; }
+  85%  { opacity: 0.3; }
+  100% { transform: translateY(-30vh) scale(1.5); opacity: 0; }
+}
+
+/* ─── Login Card ──────────────────────────────────────────────────────────── */
+
+.login-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--r-xl);
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 10;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6), 0 0 40px rgba(255,107,26,0.05);
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ─── Logo ────────────────────────────────────────────────────────────────── */
+
+.login-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.logo-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255,107,26,0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  box-shadow: 0 0 20px rgba(255,107,26,0.2);
+}
+.logo-icon svg { width: 100%; height: 100%; }
+
+.logo-name {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--fire-400), #ff3d00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+}
+.logo-sub {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* ─── Titles ──────────────────────────────────────────────────────────────── */
+
+.login-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+/* ─── Alert ───────────────────────────────────────────────────────────────── */
+
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+  color: var(--red-400);
+  font-size: 13px;
+  margin-bottom: 20px;
+  animation: shake 0.4s ease;
+}
+.alert-error svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60%  { transform: translateX(-4px); }
+  40%, 80%  { transform: translateX(4px); }
+}
+
+/* ─── Form ────────────────────────────────────────────────────────────────── */
+
+.login-form { display: flex; flex-direction: column; gap: 16px; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.input-wrapper { position: relative; }
+
+.input-wrapper input {
+  width: 100%;
+  padding: 11px 40px 11px 38px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--r-md);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  transition: var(--transition);
+}
+.input-wrapper input::placeholder { color: var(--text-muted); }
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--fire-400);
+  box-shadow: 0 0 0 3px var(--fire-glow);
+  background: var(--bg-card);
+}
+
+.input-icon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+.toggle-pass:hover { color: var(--text-secondary); }
+.toggle-pass svg { width: 16px; height: 16px; }
+
+/* ─── Login Button ────────────────────────────────────────────────────────── */
+
+.btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 13px;
+  margin-top: 4px;
+  border: none;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--fire-400), var(--fire-600));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 16px var(--fire-glow);
+  letter-spacing: 0.3px;
+}
+.btn-login:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px var(--fire-glow);
+}
+.btn-login:active { transform: translateY(0); }
+.btn-login:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ─── Hint ────────────────────────────────────────────────────────────────── */
+
+.login-hint {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.login-hint code {
+  background: var(--bg-elevated);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  color: var(--text-secondary);
+}

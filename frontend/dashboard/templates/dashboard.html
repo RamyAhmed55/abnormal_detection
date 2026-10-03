@@ -1,0 +1,185 @@
+{% extends "layout.html" %}
+{% block page_title %}Dashboard{% endblock %}
+{% block header_title %}Overview{% endblock %}
+
+{% block content %}
+<!-- Stats Grid -->
+<div class="stats-grid" id="statsGrid">
+  <div class="stat-card stat-card--cameras">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+      </svg>
+    </div>
+    <div class="stat-body">
+      <div class="stat-value" id="statCameras">0</div>
+      <div class="stat-label">Active Cameras</div>
+    </div>
+    <div class="stat-tag stat-tag--blue">Live</div>
+  </div>
+
+  <div class="stat-card stat-card--alerts">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+    </div>
+    <div class="stat-body">
+      <div class="stat-value" id="statAlerts">—</div>
+      <div class="stat-label">Total Alerts</div>
+    </div>
+  </div>
+
+  <div class="stat-card stat-card--abnormal">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+    </div>
+    <div class="stat-body">
+      <div class="stat-value" id="statAbnormal">—</div>
+      <div class="stat-label">Abnormal Events</div>
+    </div>
+    <div class="stat-tag stat-tag--red" id="statAbnormalTag" style="display:none">!</div>
+  </div>
+
+  <div class="stat-card stat-card--normal">
+    <div class="stat-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+        <polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="stat-body">
+      <div class="stat-value" id="statNormal">—</div>
+      <div class="stat-label">Normal Events</div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Alerts -->
+<div class="section-header">
+  <h2 class="section-title">Recent Alerts</h2>
+  <a href="/alerts" class="btn-link">View All →</a>
+</div>
+
+<div class="recent-alerts-container" id="recentAlerts">
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading alerts...</p>
+  </div>
+</div>
+
+<!-- Quick Action Card -->
+<div class="section-header" style="margin-top:32px">
+  <h2 class="section-title">Quick Actions</h2>
+</div>
+
+<div class="quick-actions-grid">
+  <a href="/upload" class="quick-action-card" id="qaUpload">
+    <div class="qa-icon qa-icon--orange">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+    </div>
+    <div class="qa-body">
+      <h3>Upload & Test Video</h3>
+      <p>Upload a video file and run real-time fire & smoke detection</p>
+    </div>
+    <svg class="qa-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+
+  <a href="/alerts" class="quick-action-card" id="qaAlerts">
+    <div class="qa-icon qa-icon--red">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 01-3.46 0"/>
+      </svg>
+    </div>
+    <div class="qa-body">
+      <h3>Review Alerts</h3>
+      <p>Watch alert videos and read AI analysis reports</p>
+    </div>
+    <svg class="qa-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+
+  <a href="/saved" class="quick-action-card" id="qaSaved">
+    <div class="qa-icon qa-icon--teal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/>
+      </svg>
+    </div>
+    <div class="qa-body">
+      <h3>Saved Videos</h3>
+      <p>Manage your collection of saved alert recordings</p>
+    </div>
+    <svg class="qa-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+    </svg>
+  </a>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+// Load stats
+async function loadStats() {
+  try {
+    const resp = await fetch('/api/stats');
+    const data = await resp.json();
+    document.getElementById('statCameras').textContent = data.active_cameras;
+    document.getElementById('statAlerts').textContent = data.total_alerts;
+    document.getElementById('statAbnormal').textContent = data.abnormal_events;
+    document.getElementById('statNormal').textContent = data.normal_events;
+    if (data.abnormal_events > 0) {
+      document.getElementById('statAbnormalTag').style.display = 'inline-block';
+    }
+  } catch (e) { console.error('Stats load error', e); }
+}
+
+// Load recent alerts
+async function loadRecentAlerts() {
+  const container = document.getElementById('recentAlerts');
+  try {
+    const resp = await fetch('/api/alerts');
+    const alerts = await resp.json();
+    if (!alerts.length) {
+      container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><p>No alerts yet. Upload a video to test detection.</p></div>`;
+      return;
+    }
+    const recent = alerts.slice(0, 5);
+    container.innerHTML = recent.map(a => alertCardHTML(a)).join('');
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><p>Failed to load alerts.</p></div>`;
+  }
+}
+
+function alertCardHTML(alert) {
+  const isAbn = alert.is_abnormal;
+  const sevClass = {high:'sev-high', medium:'sev-medium', low:'sev-low'}[alert.severity] || 'sev-low';
+  const icon = isAbn ? '🚨' : '✅';
+  return `
+    <div class="alert-row ${isAbn ? 'alert-row--abnormal' : 'alert-row--normal'}">
+      <div class="alert-row-icon">${icon}</div>
+      <div class="alert-row-body">
+        <div class="alert-row-title">${alert.event_type.toUpperCase()} — ${alert.camera_id}</div>
+        <div class="alert-row-desc">${alert.description.slice(0, 100)}${alert.description.length > 100 ? '...' : ''}</div>
+      </div>
+      <div class="alert-row-right">
+        <span class="severity-badge ${sevClass}">${alert.severity}</span>
+        <span class="conf-text">${Math.round(alert.confidence * 100)}%</span>
+      </div>
+    </div>`;
+}
+
+loadStats();
+loadRecentAlerts();
+</script>
+{% endblock %}

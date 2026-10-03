@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block page_title %}Saved Videos{% endblock %}
+{% block header_title %}Saved Videos{% endblock %}
+
+{% block content %}
+<div class="saved-header">
+  <p class="page-subtitle">Videos you've saved from alert packages for future reference</p>
+  <div class="saved-count" id="savedCount">Loading...</div>
+</div>
+
+<div class="saved-container" id="savedContainer">
+  <div class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading saved videos...</p>
+  </div>
+</div>
+
+<!-- Video Playback Modal -->
+<div class="modal-backdrop" id="savedModal" style="display:none" onclick="closeSavedModal(event)">
+  <div class="modal-box modal-box--large">
+    <button class="modal-close" onclick="document.getElementById('savedModal').style.display='none'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="modal-header" id="savedModalHeader"></div>
+
+    <div class="modal-body">
+      <video id="savedVideo" controls class="modal-video" style="width:100%">
+        Your browser does not support the video tag.
+      </video>
+      <div class="saved-meta" id="savedMeta"></div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-danger" id="deleteBtn" onclick="deleteCurrentVideo()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/>
+        </svg>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+{% endblock %}

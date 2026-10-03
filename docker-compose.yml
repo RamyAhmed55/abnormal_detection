@@ -1,0 +1,75 @@
+version: "3.9"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# docker-compose.yml — FireGuard AI Detection System
+# ─────────────────────────────────────────────────────────────────────────────
+# Two services:
+#   dashboard  — Web UI on http://localhost:5000  (use this most of the time)
+#   backend    — Headless terminal mode           (use with --source flag)
+#
+# Quick start (web dashboard):
+#   docker compose up dashboard
+#
+# Quick start (headless on a video file):
+#   docker compose run --rm backend --source Data/videos/fire.mp4
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── 1. Web Dashboard (Flask + SocketIO) ────────────────────────────────────
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: fireguard-dashboard:latest
+    container_name: fireguard_dashboard
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      # Persist database + uploads + alerts between restarts
+      - fireguard_data:/app/data
+      - fireguard_alerts:/app/alerts_output
+      - fireguard_crops:/app/saved_crops
+      # Mount your video data folder (read-only)
+      - ./Data:/app/Data:ro
+      # Mount weights (read-only)
+      - ./weights:/app/weights:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ── 2. Headless Backend (Terminal / CI / Batch processing) ─────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: fireguard-backend:latest
+    container_name: fireguard_backend
+    env_file:
+      - .env
+    volumes:
+      - fireguard_data:/app/data
+      - fireguard_alerts:/app/alerts_output
+      - fireguard_crops:/app/saved_crops
+      - ./Data:/app/Data:ro
+      - ./weights:/app/weights:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Override CMD at runtime:
+    # docker compose run --rm backend --source Data/videos/fire.mp4
+    profiles:
+      - backend   # Only starts when explicitly selected
+
+# ── Persistent Volumes ────────────────────────────────────────────────────────
+volumes:
+  fireguard_data:
+  fireguard_alerts:
+  fireguard_crops:

@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+venv_yolo/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Environment secrets — NEVER commit
+.env
+
+# Jupyter Notebooks (optional — remove if you want them tracked)
+*.ipynb
+
+# YOLO / PyTorch artifacts — exclude all .pt EXCEPT weights/best.pt and weights/best (5).pt
+runs/
+*.pt
+*.onnx
+*.engine
+# BUT include the specific production weights we want in git
+!weights/best.pt
+!weights/best (5).pt
+
+# Runtime data (generated at runtime)
+data/
+detection.log
+alerts_output/
+saved_crops/
+grouped_crops/
+cache/
+
+# Large media files
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+*.avi
+Data/
+Data2/
+
+# Uploaded videos and temp clips (runtime)
+frontend/dashboard/static/uploads/
+data/uploads/
+data/temp/
+data/saved_videos/
+
+# Loose .pt experiment files at root level
+besdepi.pt
+best_hug.pt
+best_hug11.pt
+best_lin.pt
+best_low.pt
+best_ro.pt
+best_s.pt
+best_11.pt
+
+# Extra loose video files at root
+Leg_Press_*.mp4
+Shoulder_Press_*.mp4
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Architecture doc (local only)
+ARCHITECTURE.md

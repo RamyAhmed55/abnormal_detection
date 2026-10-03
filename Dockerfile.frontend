@@ -1,0 +1,46 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dockerfile.frontend — Fire & Smoke Detection (Full Web Dashboard)
+# ─────────────────────────────────────────────────────────────────────────────
+# Runs the Flask dashboard + detection pipeline together.
+# Usage:  docker build -f Dockerfile.frontend -t fireguard-dashboard .
+#         docker run -p 5000:5000 --env-file .env fireguard-dashboard
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM python:3.11-slim
+
+# System deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libsm6 \
+        libxrender1 \
+        libxext6 \
+        ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy & install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir \
+        ultralytics \
+        opencv-python-headless \
+        python-dotenv \
+        google-generativeai \
+        flask \
+        flask-socketio \
+        eventlet
+
+# Copy source code
+COPY backend/         ./backend/
+COPY frontend/        ./frontend/
+COPY weights/         ./weights/
+
+# Runtime dirs
+RUN mkdir -p data/temp data/uploads data/saved_videos alerts_output saved_crops grouped_crops
+
+EXPOSE 5000
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
+# Web dashboard mode — opens on http://localhost:5000
+ENTRYPOINT ["python", "frontend/run_dashboard.py"]
+CMD ["--host", "0.0.0.0", "--port", "5000", "--no-browser"]

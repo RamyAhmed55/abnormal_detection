@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block page_title %}Upload & Test{% endblock %}
+{% block header_title %}Upload & Test Detection{% endblock %}
+
+{% block content %}
+<div class="upload-layout">
+
+  <!-- ─── Left Panel: Upload + Controls ───────────────────────────────── -->
+  <div class="upload-panel">
+
+    <!-- Upload Zone -->
+    <div class="upload-card">
+      <h2 class="card-title">Upload Video</h2>
+      <p class="card-subtitle">Upload a video file to run fire & smoke detection</p>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-content" id="dropContent">
+          <div class="drop-icon">
+            <svg viewBox="0 0 64 64" fill="none"><path d="M32 8L32 40M32 8L20 22M32 8L44 22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M8 44v10a2 2 0 002 2h44a2 2 0 002-2V44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
+          </div>
+          <p class="drop-label">Drag & drop video here</p>
+          <p class="drop-sub">or click to browse files</p>
+          <p class="drop-hint">MP4, AVI, MOV, MKV, WebM • Max 1 GB</p>
+        </div>
+
+        <div class="upload-progress-wrap" id="uploadProgress" style="display:none">
+          <div class="progress-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+          </div>
+          <p class="progress-filename" id="progressFilename"></p>
+          <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <p class="progress-pct" id="progressPct">0%</p>
+        </div>
+
+        <input type="file" id="fileInput" accept="video/*" style="display:none">
+      </div>
+
+      <div class="upload-actions" id="uploadActions" style="display:none">
+        <button class="btn-primary btn-full" id="startBtn" onclick="startDetection()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Start Detection
+        </button>
+        <button class="btn-ghost btn-full" id="clearBtn" onclick="clearUpload()">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+    <!-- VLM Result Card -->
+    <div class="result-card" id="resultCard" style="display:none">
+      <div class="result-card-header" id="resultCardHeader">
+        <div class="result-status-icon" id="resultStatusIcon"></div>
+        <div>
+          <h3 class="result-title" id="resultTitle">Analysis Result</h3>
+          <p class="result-subtitle" id="resultSubtitle">VLM Judgment</p>
+        </div>
+      </div>
+
+      <div class="result-body" id="resultBody"></div>
+    </div>
+
+    <!-- Live Status -->
+    <div class="live-status-card" id="statusCard" style="display:none">
+      <div class="live-indicator">
+        <div class="live-dot"></div>
+        <span>DETECTING</span>
+      </div>
+      <div class="status-info">
+        <div class="status-fps" id="statusFps">FPS: —</div>
+        <div class="status-vlm" id="statusVlm">VLM: Idle</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ─── Right Panel: Live Video Feed ────────────────────────────────── -->
+  <div class="video-panel">
+    <div class="video-card">
+      <div class="video-card-header">
+        <h2 class="card-title">Live Detection Feed</h2>
+        <div class="video-controls">
+          <button class="btn-icon" id="stopBtn" onclick="stopDetection()" style="display:none" title="Stop Detection">
+            <svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="1"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Video Display -->
+      <div class="video-display" id="videoDisplay">
+        <div class="video-placeholder" id="videoPlaceholder">
+          <div class="placeholder-content">
+            <svg viewBox="0 0 64 64" fill="none"><path d="M48 32L20 48V16l28 16z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><rect x="4" y="8" width="56" height="48" rx="4" stroke="currentColor" stroke-width="2"/></svg>
+            <p>Upload a video to start detection</p>
+          </div>
+        </div>
+        <img id="videoCanvas" src="" alt="Detection Feed" style="display:none; width:100%; border-radius:8px;">
+      </div>
+
+      <!-- Detection Info Bar -->
+      <div class="detection-bar" id="detectionBar" style="display:none">
+        <div class="detection-tracks" id="detectionTracks">No detections</div>
+      </div>
+    </div>
+
+    <!-- Alerts from this session -->
+    <div class="session-alerts" id="sessionAlerts" style="display:none">
+      <h3 class="session-alerts-title">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+        Detection Alerts
+      </h3>
+      <div id="sessionAlertsList" style="max-height: 250px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

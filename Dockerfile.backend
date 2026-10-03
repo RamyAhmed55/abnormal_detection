@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Dockerfile.backend — Fire & Smoke Detection (Backend Only / Headless)
+# ─────────────────────────────────────────────────────────────────────────────
+# Runs the detection pipeline WITHOUT the web dashboard.
+# Usage:  docker build -f Dockerfile.backend -t fireguard-backend .
+#         docker run --rm -v $(pwd)/Data:/app/Data fireguard-backend \
+#                    --source Data/videos/bucket.mp4
+# ─────────────────────────────────────────────────────────────────────────────
+
+FROM python:3.11-slim
+
+# System deps (OpenCV headless needs libGL)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libglib2.0-0 \
+        libsm6 \
+        libxrender1 \
+        libxext6 \
+        ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy requirements first (layer cache)
+COPY requirements.txt .
+
+# Install CPU-only deps (no torch/VLLM for pure Gemini-API mode)
+# If you want GPU support, remove this line and use the GPU image below.
+RUN pip install --no-cache-dir \
+        ultralytics \
+        opencv-python-headless \
+        python-dotenv \
+        google-generativeai \
+        flask \
+        flask-socketio \
+        eventlet
+
+# Copy source code
+COPY backend/         ./backend/
+COPY weights/         ./weights/
+
+# Create runtime directories
+RUN mkdir -p data/temp data/uploads data/saved_videos alerts_output saved_crops grouped_crops
+
+# Copy env template (user mounts their real .env at runtime)
+COPY .env.example .env.example
+
+# ─── Entry point ──────────────────────────────────────────────────────────────
+# Default: terminal mode, no GUI window.
+# Override CMD at runtime, e.g.:
+#   docker run ... fireguard-backend --source Data/videos/fire.mp4
+ENTRYPOINT ["python", "backend/main.py"]
+CMD ["--source", "0"]
